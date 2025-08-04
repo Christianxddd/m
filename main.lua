@@ -1,91 +1,35 @@
 
--- XRNL HUB - By Sebastian (versión extendida estilo XZuyaX)
--- Hecho con Rayfield | Compatible con KRNL Móvil
+-- XRNL HUB - By Sebastian (Botón flotante para abrir panel Rayfield)
+-- Compatible con KRNL móvil
 
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+-- Crear botón flotante en la pantalla
+local btn = Instance.new("TextButton")
+btn.Name = "XRNLButton"
+btn.Size = UDim2.new(0, 120, 0, 40)
+btn.Position = UDim2.new(0, 20, 0, 20)
+btn.BackgroundColor3 = Color3.new(0, 0, 0)
+btn.TextColor3 = Color3.new(1, 1, 1)
+btn.Text = "Abrir XRNL"
+btn.TextSize = 18
+btn.Font = Enum.Font.SourceSansBold
+btn.BorderSizePixel = 0
+btn.Draggable = true
+btn.Active = true
 
-local Window = Rayfield:CreateWindow({
-   Name = "XRNL HUB - By Sebastian",
-   LoadingTitle = "Cargando XRNL...",
-   LoadingSubtitle = "By Sebastian",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "XRNL",
-      FileName = "xrnl_settings"
-   },
-   Discord = {
-      Enabled = true,
-      Invite = "tuserverdiscord",
-      RememberJoins = true
-   },
-   KeySystem = false
-})
+-- Crear GUI contenedor si no existe
+local gui = Instance.new("ScreenGui")
+gui.Name = "XRNL_GUI"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
 
--- PESTAÑAS IGUAL QUE XZUYAX
+-- Si es en KRNL móvil, usar gethui o CoreGui
+local success, result = pcall(function() return gethui and gethui() or game.CoreGui end)
+local parentGui = success and result or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+gui.Parent = parentGui
+btn.Parent = gui
 
-local Home = Window:CreateTab("🏠 Home", 4483362458)
-local Main = Window:CreateTab("🖥 Main", 4483362458)
-local Rollback = Window:CreateTab("🔁 Rollback", 4483362458)
-local BallHack = Window:CreateTab("⚽ Ball Hack", 4483362458)
-local Misc = Window:CreateTab("📁 Misc", 4483362458)
-local Event = Window:CreateTab("🎁 Event", 4483362458)
-local Visual = Window:CreateTab("👁 Visual", 4483362458)
-local Server = Window:CreateTab("🖧 Server", 4483362458)
-local Config = Window:CreateTab("⚙ Window and File Configuration", 4483362458)
-local Theme = Window:CreateTab("🎨 Create Theme", 4483362458)
-
--- CONTENIDO DEMO PARA CADA TAB
-
-Home:CreateParagraph({Title = "Bienvenido a XRNL HUB", Content = "Hecho por Sebastian
-YouTube: XRNL Scripts
-TikTok: @xrnl_hub"})
-Home:CreateButton({Name = "Copiar Discord", Callback = function() setclipboard("https://discord.gg/tuinvite") end})
-
-Main:CreateDropdown({
-   Name = "Posición",
-   Options = {"GK", "DF", "MF", "FW"},
-   CurrentOption = "FW",
-   Callback = function(option) print("Posición: "..option) end
-})
-
-Rollback:CreateButton({Name = "Reiniciar Personaje", Callback = function() game.Players.LocalPlayer.Character:BreakJoints() end})
-
-BallHack:CreateToggle({
-   Name = "Magnet Ball",
-   CurrentValue = false,
-   Callback = function(v)
-      getgenv().MagnetBall = v
-      while getgenv().MagnetBall do
-         local ball = workspace:FindFirstChild("Ball")
-         if ball then ball.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame end
-         wait()
-      end
-   end
-})
-
-Misc:CreateButton({Name = "Sin cooldown", Callback = function()
-   for _,v in pairs(getgc(true)) do if type(v)=="table" and rawget(v,"Cooldown") then v.Cooldown=0 end end
-end})
-
-Visual:CreateToggle({
-   Name = "Resaltar balón",
-   CurrentValue = false,
-   Callback = function(state)
-      local ball = workspace:FindFirstChild("Ball")
-      if ball then
-         if state then
-            local h = Instance.new("Highlight", ball)
-            h.FillColor = Color3.fromRGB(255,255,0)
-         else
-            for _,v in pairs(ball:GetChildren()) do if v:IsA("Highlight") then v:Destroy() end end
-         end
-      end
-   end
-})
-
-Server:CreateButton({Name = "Rejoin", Callback = function()
-   game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
-end})
-
-Config:CreateParagraph({Title = "Configuración", Content = "Guarda tus configuraciones del HUB XRNL"})
-Theme:CreateParagraph({Title = "Tema", Content = "Tema oscuro moderno con íconos y secciones"})
+-- Función para abrir el panel al presionar el botón
+btn.MouseButton1Click:Connect(function()
+    btn.Visible = false
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Christianxddd/m/c2da1fbbe0b1068a522100ec6ed63dd1bc1ce124/main.lua"))()
+end)
